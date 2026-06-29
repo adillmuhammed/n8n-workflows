@@ -1,0 +1,287 @@
+{
+  "name": "My Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1j6DwjvEU3E-6V7LJcQK2-IOLp9a1K-iE7i2ndCDVMuA",
+          "mode": "list",
+          "cachedResultName": "automation workflow",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1j6DwjvEU3E-6V7LJcQK2-IOLp9a1K-iE7i2ndCDVMuA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1j6DwjvEU3E-6V7LJcQK2-IOLp9a1K-iE7i2ndCDVMuA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        -112
+      ],
+      "id": "550ea3e5-c502-42df-9912-ea3d6e43b7c7",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "opKAm1KrxJ3lO9ND",
+          "name": "Google Sheets Trigger account 4115"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Summerize the article: {{ $json['News links'] }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -64,
+        -112
+      ],
+      "id": "8c6f5743-b37d-4afc-a8f5-77c3b3024ca1",
+      "name": "Article summerizer"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -64,
+        96
+      ],
+      "id": "9c53db78-60b3-4fcb-9c64-cc260598fa40",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "MZ8bOyipiztrpiaI",
+          "name": "Google Gemini(PaLM) Api account 9765"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        304,
+        -96
+      ],
+      "id": "3b41dde7-7b3d-4c3b-bbfa-16d724c1e5d8",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "MZ8bOyipiztrpiaI",
+          "name": "Google Gemini(PaLM) Api account 9765"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "person": "3MSLlfYVCo",
+        "text": "={{ $json.text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        656,
+        -272
+      ],
+      "id": "d64b32ce-dc9a-4554-a55b-111c463947d3",
+      "name": "Create a post",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "T7tyLyVtbLhoYJmo",
+          "name": "LinkedIn account 3015"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        336,
+        368
+      ],
+      "id": "8d84e1c2-84b4-4bd8-a8cd-dc124fe96882",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "MZ8bOyipiztrpiaI",
+          "name": "Google Gemini(PaLM) Api account 9765"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [
+        688,
+        176
+      ],
+      "id": "568b04e1-69b2-46dd-9c55-f219d77522ec",
+      "name": "Create Tweet",
+      "credentials": {
+        "twitterOAuth2Api": {
+          "id": "FIVfpNiaAILkHSII",
+          "name": "X account 1316"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Assume the role of an industry expert and draft a LinkedIn post discussing key points from a news article relevant to artificial intelligence. The post should provide insightful analysis, connect with current industry trends, and encourage professional engagement or discussions. Highlight any notable implications for the industry. LinkedIn supports detailed posts, so ensure it is informative and structured. Add a professional call to action. Directly start with the post content, do not add any primer like \"here is your content for LinkedIn post\". Here's a summary of the article: {{ $json.text }}",
+        "messages": {
+          "messageValues": []
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        304,
+        -272
+      ],
+      "id": "d26a350e-8631-4220-b287-ef0c13933fa8",
+      "name": "Generate linkdln post content"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Draft an X post as an AI industry expert analyzing a key news article. The post should:\nDeliver sharp insights on the article's main points.\nConnect to current AI trends.\nSpark discussion with a thought-provoking question.\nKeep it punchy and engaging.\nEnd with a clear CTA.\nLength should be within 30 words. Focus on what matters most to the AI community. Make every word count.\nArticle summary:  {{ $json.text }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        336,
+        176
+      ],
+      "id": "ca8e4d24-f552-477a-a736-a5fd10b037dd",
+      "name": "Generate x post content"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Article summerizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Article summerizer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article summerizer": {
+      "main": [
+        [
+          {
+            "node": "Generate linkdln post content",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate x post content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate linkdln post content",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate x post content",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate linkdln post content": {
+      "main": [
+        [
+          {
+            "node": "Create a post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate x post content": {
+      "main": [
+        [
+          {
+            "node": "Create Tweet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "09c39daf-b562-4d12-b5d9-0931695c8823",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "969257b09ad2942bbaff2e2288304f4969030574d109cdeca05bf11f630884df"
+  },
+  "id": "GIxOy6GDgm3qDOSc",
+  "tags": []
+}
