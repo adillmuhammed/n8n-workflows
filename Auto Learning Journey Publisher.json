@@ -1,0 +1,286 @@
+{
+  "name": "My Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1j6DwjvEU3E-6V7LJcQK2-IOLp9a1K-iE7i2ndCDVMuA",
+          "mode": "list",
+          "cachedResultName": "Daily skill learned",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1j6DwjvEU3E-6V7LJcQK2-IOLp9a1K-iE7i2ndCDVMuA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1j6DwjvEU3E-6V7LJcQK2-IOLp9a1K-iE7i2ndCDVMuA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        160
+      ],
+      "id": "9ec86294-2bc7-496b-abda-4a1cf35b7fa1",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "opKAm1KrxJ3lO9ND",
+          "name": "Google Sheets Trigger account 4115"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -368,
+        368
+      ],
+      "id": "0c92f6db-d5f5-496b-9b16-741da01b7852",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "MZ8bOyipiztrpiaI",
+          "name": "Google Gemini(PaLM) Api account 9765"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        176
+      ],
+      "id": "5315736c-10e1-4b11-bfdd-5eeda4f327a1",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "MZ8bOyipiztrpiaI",
+          "name": "Google Gemini(PaLM) Api account 9765"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "person": "3MSLlfYVCo",
+        "text": "={{ $json.text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        352,
+        0
+      ],
+      "id": "2bbe11c2-f530-42f7-9d21-cbb642e59686",
+      "name": "Create a post",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "T7tyLyVtbLhoYJmo",
+          "name": "LinkedIn account 3015"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        32,
+        640
+      ],
+      "id": "879768b3-1b64-439d-8320-749767422ecd",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "MZ8bOyipiztrpiaI",
+          "name": "Google Gemini(PaLM) Api account 9765"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [
+        384,
+        448
+      ],
+      "id": "ab1195c3-3477-45f6-b7c8-349e94a7f2c2",
+      "name": "Create Tweet",
+      "credentials": {
+        "twitterOAuth2Api": {
+          "id": "FIVfpNiaAILkHSII",
+          "name": "X account 1316"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Transform this learning summary into an engaging LinkedIn post: {{ $json.text }}\n\nCreate a post that:\n- Starts with a hook about today's learning achievement\n- Shares 2-3 specific insights or skills gained\n- Includes a reflection on how this knowledge applies to real-world scenarios\n- Uses relevant hashtags: #AIBootcamp #LearningJourney #GenerativeAI #TechSkills #100DaysOfCode\n- Ends with a question to engage the community\n- Length: 200-300 words\n- Professional yet authentic tone\n- Include relevant emojis for visual appeal\n\nFormat with line breaks for readability. Start directly with ",
+        "messages": {
+          "messageValues": []
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1fcd6391-20bd-42a9-9f8d-82fd0f8181f5",
+      "name": "Generate linkdln post content"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create a punchy X/Twitter post about this learning: {{ $json.text }}\n\nRequirements:\n- Celebrate the learning milestone enthusiastically\n- Mention 1 specific skill or tool learned\n- Keep under 280 characters\n- Include 2-3 hashtags: #AI #Learning #TechJourney\n- Add relevant emoji\n\nExample format: \"Day X: [achievement]! Learned [specific skill/tool]. [Key insight]. [Question/CTA]? #hashtags\"\n\nOutput only the tweet text.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        32,
+        448
+      ],
+      "id": "02bf0512-1b39-4ee3-bf47-7dc2195ea993",
+      "name": "Generate x post content"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze this learning progress entry and create a professional summary:\n\nDate: {{ $json.Date }}\nTopic: {{ $json['Topic/module'] }}\nWhat I Learned: {{ $json['What I Learned'] }}\nSkills/Tools Used: {{ $json['Skills/Tools'] }}\n\nCreate a concise, impactful summary that:\n1. Highlights the main concept mastered\n2. Emphasizes practical skills gained\n3. Shows progression in the learning journey\n4. Maintains an enthusiastic but professional tone\n\nKeep it under 100 words, focusing on achievements and growth.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -368,
+        160
+      ],
+      "id": "2d8190e6-721a-43a9-b4df-e2431b4a177a",
+      "name": "Generate summery"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Generate summery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate summery",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate linkdln post content",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate x post content",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate linkdln post content": {
+      "main": [
+        [
+          {
+            "node": "Create a post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate x post content": {
+      "main": [
+        [
+          {
+            "node": "Create Tweet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate summery": {
+      "main": [
+        [
+          {
+            "node": "Generate x post content",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate linkdln post content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "3370f157-cfa0-4a9b-a816-ce08a301dbee",
+  "meta": {
+    "instanceId": "969257b09ad2942bbaff2e2288304f4969030574d109cdeca05bf11f630884df"
+  },
+  "id": "3VDzunUxcskSDKWu",
+  "tags": []
+}
