@@ -1,0 +1,238 @@
+{
+  "name": "My Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        -96
+      ],
+      "id": "9c139aff-1016-4850-96b0-adef303ca21f",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        496,
+        96
+      ],
+      "id": "80f0ac26-8111-4723-8aac-18bb755780aa",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "WBhDqJ98NNpNjmHh",
+          "name": "Google Gemini(PaLM) Api account 10845"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://www.normaltech.ai/feed",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -176,
+        -192
+      ],
+      "id": "01bda763-5351-49c4-b5aa-6567c5a4e45a",
+      "name": "Normal tech"
+    },
+    {
+      "parameters": {
+        "url": "https://aibusiness.com/rss.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -176,
+        0
+      ],
+      "id": "4149af3f-8f5b-46c1-8929-7891b638b366",
+      "name": "Ai business"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        48,
+        -96
+      ],
+      "id": "7a6f2357-589a-4ea7-97bc-43d09c221e1f",
+      "name": "Data merger"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        272,
+        -96
+      ],
+      "id": "d5a6eef2-bba5-4849-ab0c-42a8a98d4e6c",
+      "name": "Data aggregator"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an AI news summarizer handling multiple categories.\nOrganize by category:\nAI NEWS\n=======\n[Top 3 AI news items]\nTECHNOLOGY UPDATES\n==================\n[Top 3 technology items]\nFor each item:\n- Headline in ALL CAPS\n- 2-3 sentence summary\n- Article link\nKeep it professional and scannable."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        496,
+        -96
+      ],
+      "id": "d3988873-b8ee-4f69-9401-7f44bd92e20e",
+      "name": "Ai summerization"
+    },
+    {
+      "parameters": {
+        "sendTo": "adilu9971@gmail.com",
+        "subject": "Ai news summery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        848,
+        -96
+      ],
+      "id": "bcf59ae0-b49a-48bd-bcf8-2d16c370d504",
+      "name": "Send a message",
+      "webhookId": "a1605381-4fa6-44f3-bb76-89537c546ed8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "sO9jAJFs5OcHxo0I",
+          "name": "Gmail account 2918"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normal tech",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Ai business",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Ai summerization",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normal tech": {
+      "main": [
+        [
+          {
+            "node": "Data merger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ai business": {
+      "main": [
+        [
+          {
+            "node": "Data merger",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Data merger": {
+      "main": [
+        [
+          {
+            "node": "Data aggregator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data aggregator": {
+      "main": [
+        [
+          {
+            "node": "Ai summerization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ai summerization": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "24faa14f-5714-4792-880f-660a6509d93e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "969257b09ad2942bbaff2e2288304f4969030574d109cdeca05bf11f630884df"
+  },
+  "id": "jnaoTU8Vt0O2I6A7",
+  "tags": []
+}
