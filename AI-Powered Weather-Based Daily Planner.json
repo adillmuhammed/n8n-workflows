@@ -1,0 +1,180 @@
+{
+  "name": "AI-Powered Weather-Based Daily Planner",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -336,
+        -64
+      ],
+      "id": "9ff022d7-90c6-4000-bb20-438ad53ea2a6",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        128
+      ],
+      "id": "b740322c-b751-41fa-845a-d1da80f4349c",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "dq5XLxDK1uLGmKXS",
+          "name": "Google Gemini(PaLM) Api account 11147"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "adilu9971@gmail.com",
+        "subject": "Today's whether updates and plannings",
+        "emailType": "text",
+        "message": "={{ $json.text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        432,
+        -64
+      ],
+      "id": "0795bd02-80f7-4e4d-8901-07b0d7973a65",
+      "name": "Send a message",
+      "webhookId": "b5c2c4bc-0d65-4847-9902-9e06c5485102",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7GSlXtEIMsjjLoM7",
+          "name": "Gmail account 2986"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openWeatherMapApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "Kochi,IN"
+            },
+            {
+              "name": "appid",
+              "value": "{6942463e831b36afb6a634b100f23c28}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -128,
+        -64
+      ],
+      "id": "d50dcec1-ebae-4098-bc9e-21b63b54b903",
+      "name": "Fetch weather Data",
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "8AtqW7l4QGp4GDJL",
+          "name": "OpenWeatherMap account 49"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI daily assistant creating a fun and personalized weather-based plan. Based on this weather data:\n\nTemperature: {{$json.main.temp}}°C\nWeather: {{$json.weather[0].description}}\nHumidity: {{$json.main.humidity}}%\n\nStart with a short, friendly greeting about today’s weather (e.g., “Good morning! Here’s your weather-ready plan for today!”).\nThen create a concise plan with these sections:\n\nOUTFIT SUGGESTION\nRecommend one outfit suitable for today’s weather.\nOUTDOOR ACTIVITY\nSuggest one fun outdoor activity, considering the temperature, weather, and humidity.\nWEATHER REMINDER\nInclude a practical, friendly tip (umbrella, sunscreen, jacket, or hydration reminder).\n\nFormatting rules:\nKeep it under 100 words.\nUse a friendly, engaging, and conversational tone.\nDo not use markdown formatting, bold, or special symbols.\nSeparate sections with line breaks and section titles in uppercase.\nSign off with: “Your Daily Weather ",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        80,
+        -64
+      ],
+      "id": "606521a2-213e-4cd6-8c24-4face33c4c43",
+      "name": "Summerize weather"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch weather Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Summerize weather",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch weather Data": {
+      "main": [
+        [
+          {
+            "node": "Summerize weather",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summerize weather": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": -1,
+    "availableInMCP": false
+  },
+  "versionId": "6aa65555-d6d6-46ee-b245-9c8370f4bd52",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "969257b09ad2942bbaff2e2288304f4969030574d109cdeca05bf11f630884df"
+  },
+  "id": "kJEgxwS9JAqjefGh",
+  "tags": []
+}
